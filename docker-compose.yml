@@ -1,0 +1,15 @@
+version: "2"
+services:
+  db:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - /Data/db:/data/db
+  web:
+    image: eloipuertas/fooapp-local
+    command: python app.py
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/code
