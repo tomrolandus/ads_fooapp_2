@@ -71,15 +71,18 @@ def product_detail(product_id):
 @login_required
 def product_edit(product_id):
   product = mongo.db.products.find_one({ "_id": ObjectId(product_id) })
+  if product is None:
+    # Abort with Not Found.
+    abort(404)
   form = ProductForm(request.form)
   
   if request.method == 'POST' and form.validate():
   	mongo.db.products.find_one_and_update({ "_id": ObjectId(product_id) }, { "$set": form.data })
   	return redirect(url_for('products_list'))
 
-  form.name.data = product.name
-  form.description.data = product.description
-  form.price.data = product.price
+  form.name.data = product['name']
+  form.description.data = product['description']
+  form.price.data = product['price']
   return render_template('product/edit.html', form=form)
 
 
