@@ -70,7 +70,19 @@ def product_detail(product_id):
   methods=['GET', 'POST'])
 @login_required
 def product_edit(product_id):
-  return 'Form to edit product #.'.format(product_id)
+  product = mongo.db.products.find_one({ "_id": ObjectId(product_id) })
+  form = ProductForm(request.form)
+  
+  if request.method == 'POST' and form.validate():
+  	mongo.db.products.find_one_and_update({ "_id": ObjectId(product_id) }, { "$set": form.data })
+  	return redirect(url_for('products_list'))
+
+  form.name.data = product.name
+  form.description.data = product.description
+  form.price.data = product.price
+  return render_template('product/edit.html', form=form)
+
+
 
 @app.route('/products/create/', methods=['GET', 'POST'])
 @login_required
