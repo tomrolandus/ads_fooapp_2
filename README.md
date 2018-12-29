@@ -1,2 +1,0 @@
-# flask-fooapp
-Heroku deployment
